@@ -448,6 +448,10 @@ keypress(XKeyEvent *ev)
 		}
 	} else if (ev->state & Mod1Mask) {
 		switch(ksym) {
+		case XK_v: /* paste selection */
+			XConvertSelection(dpy, XA_PRIMARY, utf8, utf8, win,
+				CurrentTime);
+			return;
 		case XK_b:
 			movewordedge(-1);
 			goto draw;
