@@ -578,12 +578,24 @@ insert:
 		}
 		break;
 	case XK_Tab:
-		if (!sel)
-			return;
-		cursor = strnlen(sel->text, sizeof text - 1);
-		memcpy(text, sel->text, cursor);
-		text[cursor] = '\0';
-		match();
+		if(sel && sel->right)
+			sel = sel->right;
+		else
+			sel = matches;
+		if (sel == next) {
+			curr = next;
+			calcoffsets();
+		}
+		break;
+	case XK_ISO_Left_Tab:
+		if(sel && sel->left)
+			sel = sel->left;
+		else
+			sel = matchend;
+		if (sel == curr) {
+			curr = prev;
+			calcoffsets();
+		}
 		break;
 	}
 
