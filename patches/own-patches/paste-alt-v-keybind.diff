@@ -1,0 +1,15 @@
+diff --git a/dmenu.c b/dmenu.c
+index 818313a..986e713 100644
+--- a/dmenu.c
++++ b/dmenu.c
+@@ -395,6 +395,10 @@ keypress(XKeyEvent *ev)
+ 		}
+ 	} else if (ev->state & Mod1Mask) {
+ 		switch(ksym) {
++		case XK_v: /* paste selection */
++			XConvertSelection(dpy, XA_PRIMARY, utf8, utf8, win,
++				CurrentTime);
++			return;
+ 		case XK_b:
+ 			movewordedge(-1);
+ 			goto draw;
