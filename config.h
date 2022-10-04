@@ -10,11 +10,11 @@ static const char *prompt      = NULL;      /* -p  option; prompt to the left of
 static const char *colors[SchemeLast][2] = {
 	/*     fg         bg       */
 	[SchemeNorm] = { ENVCOLOR, "#222222" },
-	[SchemeSel] = { "#eeeeee", ENVCOLOR },
-	[SchemeSelHighlight] = { "#ffc978", "#005577" },
-	[SchemeNormHighlight] = { "#ffc978", "#222222" },
-	[SchemeOut] = { "#000000", "#00ffff" },
-	[SchemeOutHighlight] = { "#ffc978", "#00ffff" },
+	[SchemeNormHighlight] = { "#FFFFFF", "#222222" }, /* Fuzzy highlight. 005577 */
+	[SchemeSel] = { "#222222", ENVCOLOR },
+	[SchemeSelHighlight] = { "#222222", ENVCOLOR },
+	[SchemeOut] = { "#0000ff", "#ff0000" },
+	[SchemeOutHighlight] = { "#ff0000", "#0000ff" },
 };
 /* -l option; if nonzero, dmenu uses vertical list with given number of lines */
 static unsigned int lines      = 0;
