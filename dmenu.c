@@ -154,7 +154,7 @@ drawhighlights(struct item *item, int x, int y, int maxw)
 			if (indentx - (lrpad / 2) - 1 < maxw)
 				drw_text(
 					drw,
-					x + indentx - (lrpad / 2) - 1,
+					x + indentx - (lrpad / 2) ,
 					y,
 					MIN(maxw - indentx, TEXTW(highlight) - lrpad),
 					bh, 0, highlight, 0
@@ -470,6 +470,9 @@ keypress(XKeyEvent *ev)
 		case XK_j: ksym = XK_Next;  break;
 		case XK_k: ksym = XK_Prior; break;
 		case XK_l: ksym = XK_Down;  break;
+		case XK_Return:
+		case XK_KP_Enter:
+			break;
 		default:
 			return;
 		}
@@ -553,6 +556,16 @@ insert:
 		break;
 	case XK_Return:
 	case XK_KP_Enter:
+		/* Alt+Return: Copy the selectd item to the input field */
+		if (ev->state & Mod1Mask) {
+			if (!sel)
+				return;
+			cursor = strnlen(sel->text, sizeof text - 1);
+			memcpy(text, sel->text, cursor);
+			text[cursor] = '\0';
+			match();
+			break;
+		}
 		puts((sel && !(ev->state & ShiftMask)) ? sel->text : text);
 		if (!(ev->state & ControlMask)) {
 			cleanup();
