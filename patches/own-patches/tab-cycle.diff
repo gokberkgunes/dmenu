@@ -1,8 +1,64 @@
+ dmenu.1 |  8 +++++++-
+ dmenu.c | 36 ++++++++++++++++++++++++++++++------
+ 2 files changed, 37 insertions(+), 7 deletions(-)
+
+diff --git a/dmenu.1 b/dmenu.1
+index 323f93c..1d18e0d 100644
+--- a/dmenu.1
++++ b/dmenu.1
+@@ -85,7 +85,10 @@ dmenu is completely controlled by the keyboard.  Items are selected using the
+ arrow keys, page up, page down, home, and end.
+ .TP
+ .B Tab
+-Copy the selected item to the input field.
++Move to the next item.
++.TP
++.B Shift\-Tab
++Move to the previous item.
+ .TP
+ .B Return
+ Confirm selection.  Prints the selected item to stdout and exits, returning
+@@ -97,6 +100,9 @@ Confirm selection.  Prints the selected item to stdout and continues.
+ .B Shift\-Return
+ Confirm input.  Prints the input text to stdout and exits, returning success.
+ .TP
++.B Alt\-Return
++Copy the selected item to the input field.
++.TP
+ .B Escape
+ Exit without selecting an item, returning failure.
+ .TP
 diff --git a/dmenu.c b/dmenu.c
-index 818313a..5449b7b 100644
+index 27b7a30..b342a6b 100644
 --- a/dmenu.c
 +++ b/dmenu.c
-@@ -515,12 +515,24 @@ insert:
+@@ -407,6 +407,9 @@ keypress(XKeyEvent *ev)
+ 		case XK_j: ksym = XK_Next;  break;
+ 		case XK_k: ksym = XK_Prior; break;
+ 		case XK_l: ksym = XK_Down;  break;
++		case XK_Return:
++		case XK_KP_Enter:
++			break;
+ 		default:
+ 			return;
+ 		}
+@@ -490,6 +493,15 @@ insert:
+ 		break;
+ 	case XK_Return:
+ 	case XK_KP_Enter:
++		if (ev->state & Mod1Mask) { /* Selected to the input field */
++			if (!sel)
++				return;
++			cursor = strnlen(sel->text, sizeof text - 1);
++			memcpy(text, sel->text, cursor);
++			text[cursor] = '\0';
++			match();
++			break;
++		}
+ 		puts((sel && !(ev->state & ShiftMask)) ? sel->text : text);
+ 		if (!(ev->state & ControlMask)) {
+ 			cleanup();
+@@ -515,12 +527,24 @@ insert:
  		}
  		break;
  	case XK_Tab:
@@ -32,4 +88,5 @@ index 818313a..5449b7b 100644
 +		}
  		break;
  	}
- 
+
+

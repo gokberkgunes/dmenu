@@ -29,7 +29,7 @@ index 65f25ce..cce1ad1 100644
 +++ b/dmenu.c
 @@ -26,8 +26,7 @@
  #define TEXTW(X)              (drw_fontset_getwidth(drw, (X)) + lrpad)
- 
+
  /* enums */
 -enum { SchemeNorm, SchemeSel, SchemeOut, SchemeLast }; /* color schemes */
 -
@@ -40,7 +40,7 @@ index 65f25ce..cce1ad1 100644
 @@ -113,6 +112,43 @@ cistrstr(const char *s, const char *sub)
  	return NULL;
  }
- 
+
 +static void
 +drawhighlights(struct item *item, int x, int y, int maxw)
 +{
@@ -65,7 +65,7 @@ index 65f25ce..cce1ad1 100644
 +			if (indentx - (lrpad / 2) - 1 < maxw)
 +				drw_text(
 +					drw,
-+					x + indentx - (lrpad / 2) - 1,
++					x + indentx - (lrpad / 2),
 +					y,
 +					MIN(maxw - indentx, TEXTW(highlight) - lrpad),
 +					bh, 0, highlight, 0
@@ -84,14 +84,14 @@ index 65f25ce..cce1ad1 100644
 @@ -123,7 +159,9 @@ drawitem(struct item *item, int x, int y, int w)
  	else
  		drw_setscheme(drw, scheme[SchemeNorm]);
- 
+
 -	return drw_text(drw, x, y, w, bh, lrpad / 2, item->text, 0);
 +	int r = drw_text(drw, x, y, w, bh, lrpad / 2, item->text, 0);
 +	drawhighlights(item, x, y, w);
 +	return r;
  }
- 
+
  static void
--- 
+--
 2.29.2
 
