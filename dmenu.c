@@ -204,8 +204,13 @@ drawmenu(void)
 		drw_text(drw, x, 0, w, bh, lrpad / 2, text, 0);
 		curpos = TEXTW(text) - TEXTW(&text[cursor]);
 	} else {
-		drw_rect(drw, lrpad/2 -1, 2, 2, bh - 4, 1, 0);
-		return; /* Exit early, hidden input */
+		curpos = TEXTW(text) - TEXTW(&text[cursor]);
+
+		/* Randomly draw by eighth of screen width */
+		drw_rect(drw, x, 0, (rand()*curpos)%(w/8), bh, 1, 0);
+
+		drw_map(drw, win, 0, 0, mw, mh);
+		return;
 	}
 
 	if ((curpos += lrpad / 2 - 1) < w) {
