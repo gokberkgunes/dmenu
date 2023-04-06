@@ -1,3 +1,8 @@
+From: gg
+
+The upstream of dmenu introduced a fixed width for input area width, this patch
+fallsback to good old behavior of calculated input area width.
+
 diff --git a/dmenu.c b/dmenu.c
 index 818313a..5620937 100644
 --- a/dmenu.c

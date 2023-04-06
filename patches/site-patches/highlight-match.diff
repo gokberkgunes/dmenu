@@ -3,6 +3,11 @@ From: Nathaniel Evan <nathanielevan@zohomail.com>
 Date: Fri, 11 Dec 2020 11:08:12 +0700
 Subject: [PATCH] Highlight matched text in a different color scheme
 
+Ref.
+https://tools.suckless.org/dmenu/patches/highlight/
+
+This patch is updated slightly. The letters' alignment is changed.
+
 ---
  config.def.h |  3 +++
  dmenu.c      | 44 +++++++++++++++++++++++++++++++++++++++++---

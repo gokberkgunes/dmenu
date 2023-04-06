@@ -1,5 +1,5 @@
 From: gg
-This patch enables pasting from primary clipboard with keybinding <ALT-V>.
+This patch enables pasting from clipboard with the keybind <ALT-V>.
 
 diff --git a/dmenu.c b/dmenu.c
 index 818313a..986e713 100644

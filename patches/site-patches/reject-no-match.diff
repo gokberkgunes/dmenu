@@ -1,3 +1,5 @@
+Ref. https://tools.suckless.org/dmenu/patches/reject-no-match/
+
 diff --git a/dmenu.1 b/dmenu.1
 index 9eab758..61084ab 100644
 --- a/dmenu.1

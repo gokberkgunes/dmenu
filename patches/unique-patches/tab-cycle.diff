@@ -1,6 +1,7 @@
- dmenu.1 |  8 +++++++-
- dmenu.c | 36 ++++++++++++++++++++++++++++++------
- 2 files changed, 37 insertions(+), 7 deletions(-)
+From: gg
+
+This patch introduces to cycle between options in dmenu by <TAB> and <S-TAB>.
+
 
 diff --git a/dmenu.1 b/dmenu.1
 index 323f93c..1d18e0d 100644
