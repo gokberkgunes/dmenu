@@ -598,23 +598,36 @@ insert:
 	case XK_Tab:
 		if(sel && sel->right)
 			sel = sel->right;
-		else
-			sel = matches;
+		else {
+			sel = curr = matches;
+			calcoffsets();
+			break;
+		}
+
 		if (sel == next) {
 			curr = next;
 			calcoffsets();
 		}
-		break;
+		break; /* do no try to insert tab to text */
 	case XK_ISO_Left_Tab:
-		if(sel && sel->left)
-			sel = sel->left;
-		else
-			sel = matchend;
-		if (sel == curr) {
+		if (sel && sel->left) { /* if sel is not null, check if there's something on left */
+		    sel = sel->left;
+		    /* see previous (sel->right) was curr (top of last page) */
+		    if (sel->right == curr) {
 			curr = prev;
 			calcoffsets();
+		    }
+		} else {
+			/* jump to end of list */
+			curr = matchend;
+			calcoffsets();
+			curr = prev;
+			calcoffsets();
+			while (next && (curr = curr->right))
+				calcoffsets();
+			sel = matchend;
 		}
-		break;
+		break; /* do no try to insert tab to text */
 	}
 
 draw:

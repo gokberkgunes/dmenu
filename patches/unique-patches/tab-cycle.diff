@@ -1,8 +1,6 @@
 From: gg
 
 This patch introduces to cycle between options in dmenu by <TAB> and <S-TAB>.
-
-
 diff --git a/dmenu.1 b/dmenu.1
 index 323f93c..1d18e0d 100644
 --- a/dmenu.1
@@ -30,36 +28,26 @@ index 323f93c..1d18e0d 100644
  Exit without selecting an item, returning failure.
  .TP
 diff --git a/dmenu.c b/dmenu.c
-index 27b7a30..b342a6b 100644
+index 9577b37..c301ea7 100644
 --- a/dmenu.c
 +++ b/dmenu.c
-@@ -407,6 +407,9 @@ keypress(XKeyEvent *ev)
+@@ -406,6 +406,15 @@ keypress(XKeyEvent *ev)
  		case XK_j: ksym = XK_Next;  break;
  		case XK_k: ksym = XK_Prior; break;
  		case XK_l: ksym = XK_Down;  break;
 +		case XK_Return:
 +		case XK_KP_Enter:
-+			break;
- 		default:
- 			return;
- 		}
-@@ -490,6 +493,15 @@ insert:
- 		break;
- 	case XK_Return:
- 	case XK_KP_Enter:
-+		if (ev->state & Mod1Mask) { /* Selected to the input field */
 +			if (!sel)
 +				return;
 +			cursor = strnlen(sel->text, sizeof text - 1);
 +			memcpy(text, sel->text, cursor);
 +			text[cursor] = '\0';
 +			match();
-+			break;
-+		}
- 		puts((sel && !(ev->state & ShiftMask)) ? sel->text : text);
- 		if (!(ev->state & ControlMask)) {
- 			cleanup();
-@@ -515,12 +527,24 @@ insert:
++			goto draw;
+ 		default:
+ 			return;
+ 		}
+@@ -514,13 +523,38 @@ insert:
  		}
  		break;
  	case XK_Tab:
@@ -69,25 +57,40 @@ index 27b7a30..b342a6b 100644
 -		memcpy(text, sel->text, cursor);
 -		text[cursor] = '\0';
 -		match();
+-		break;
 +		if(sel && sel->right)
 +			sel = sel->right;
-+		else
-+			sel = matches;
++		else {
++			sel = curr = matches;
++			calcoffsets();
++			break;
++		}
++
 +		if (sel == next) {
 +			curr = next;
 +			calcoffsets();
 +		}
-+		break;
++		break; /* do no try to insert tab to text */
 +	case XK_ISO_Left_Tab:
-+		if(sel && sel->left)
-+			sel = sel->left;
-+		else
-+			sel = matchend;
-+		if (sel == curr) {
++		if (sel && sel->left) { /* if sel is not null, check if there's something on left */
++		    sel = sel->left;
++		    /* see previous (sel->right) was curr (top of last page) */
++		    if (sel->right == curr) {
 +			curr = prev;
 +			calcoffsets();
++		    }
++		} else {
++			/* jump to end of list */
++			curr = matchend;
++			calcoffsets();
++			curr = prev;
++			calcoffsets();
++			while (next && (curr = curr->right))
++				calcoffsets();
++			sel = matchend;
 +		}
- 		break;
++		break; /* do no try to insert tab to text */
  	}
-
+ 
+ draw:
 
