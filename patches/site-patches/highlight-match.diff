@@ -7,6 +7,8 @@ Ref.
 https://tools.suckless.org/dmenu/patches/highlight/
 
 This patch is updated slightly. The letters' alignment is changed.
+x + indentx - (lrpad+1)/2 is used instead of x + indentx - (lrpad/2).
+
 
 ---
  config.def.h |  3 +++
@@ -70,7 +72,7 @@ index 65f25ce..cce1ad1 100644
 +			if (indentx - (lrpad / 2) - 1 < maxw)
 +				drw_text(
 +					drw,
-+					x + indentx - (lrpad / 2),
++					x + indentx - (lrpad+1)/2,
 +					y,
 +					MIN(maxw - indentx, TEXTW(highlight) - lrpad),
 +					bh, 0, highlight, 0
